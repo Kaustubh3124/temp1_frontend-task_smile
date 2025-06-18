@@ -1,0 +1,694 @@
+/* --- Basic Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- Global Body Styles --- */
+body {
+    font-family: 'Inter', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Styles to prevent scrolling when mobile menu is open */
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* --- Header Styles --- */
+header {
+    background-color: #fff;
+    padding: 15px 0;
+    width: 100%;
+    position: relative;
+}
+
+nav {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    gap: 40px;
+    position: relative; /* Essential for positioning mobile menu */
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.6em;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+
+/* Default desktop navigation links */
+/* This targets the <ul> directly when it's not wrapped in a container,
+   but we'll adjust for the new .nav-links-container later in media queries. */
+nav > ul { /* Target the direct child ul of nav */
+    list-style: none;
+    display: flex; /* Display as flex on desktop */
+    margin: 0;
+    padding: 0;
+    gap: 25px;
+    margin-right: auto;
+}
+
+nav > ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 1em;
+    transition: color 0.3s ease;
+    padding: 5px 0;
+}
+
+nav > ul li a:hover {
+    color: #333;
+}
+
+/* --- Search functionality styles --- */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.search-icon {
+    font-size: 1.2em;
+    color: #555;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+.search-icon:hover {
+    color: #555;
+}
+
+.search-input {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    padding: 7px 0;
+    font-size: 0.95em;
+    outline: none;
+    color: #333;
+    background-color: transparent;
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+    margin-right: 10px;
+    transition: width 0.3s ease, opacity 0.3s ease; /* Added transition */
+}
+
+.search-input::placeholder {
+    color: #aaa;
+    font-family: 'Inter', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.search-input.active {
+    width: 200px;
+    opacity: 1;
+    border-bottom-color: #ddd;
+    pointer-events: auto;
+    margin-right: 10px;
+}
+
+/* --- Hamburger Menu Styles --- */
+.hamburger-menu {
+    width: 30px;
+    height: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    cursor: pointer;
+    z-index: 1001; /* Ensure it's above other elements */
+    display: none; /* Hidden by default, shown on mobile */
+    margin-left: auto; /* Pushes it to the right on mobile */
+}
+
+.hamburger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: #333; /* Color of the bars */
+    transition: all 0.3s ease;
+}
+
+/* Animation for when the menu is open (cross icon) */
+.hamburger-menu.open .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+.hamburger-menu.open .bar:nth-child(2) {
+    opacity: 0; /* Hide middle bar */
+}
+.hamburger-menu.open .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Mobile Navigation Menu Container (initially hidden on mobile) */
+.nav-links-container {
+    display: block; /* By default, it's a block, but we'll hide the UL inside */
+    /* On desktop, this container just wraps the UL, its styles are less critical.
+       On mobile, it becomes the full-screen overlay. */
+}
+
+@media (max-width: 1024px) {
+    /* Mobile nav container takes over the styling */
+    .nav-links-container {
+        position: absolute; /* Position relative to <nav> */
+        top: 100%; /* Position below the header */
+        left: 0;
+        width: 100%;
+        background-color: #fff; /* Background for the mobile menu */
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Subtle shadow */
+        overflow: hidden; /* Hide overflow initially */
+        max-height: 0; /* Hidden by default */
+        transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out; /* Smooth slide effect */
+        z-index: 1000; /* Below hamburger, above content */
+        padding: 0 20px; /* Horizontal padding for menu items */
+    }
+
+    .nav-links-container.active {
+        max-height: 300px; /* Max height when active (adjust as needed) */
+        padding: 20px 20px; /* Padding when open */
+    }
+
+    .nav-links-container ul {
+        flex-direction: column; /* Stack links vertically */
+        margin: 0;
+        padding: 0;
+        gap: 15px; /* Space between mobile menu links */
+        text-align: center; /* Center align links */
+        display: flex; /* Ensure display flex for mobile stacking */
+    }
+
+    .nav-links-container ul li {
+        margin-bottom: 0; /* Remove default list item margin */
+    }
+
+    .nav-links-container ul li a {
+        padding: 10px 0; /* Larger clickable area for mobile links */
+        display: block; /* Make links take full width */
+        font-size: 1.1em; /* Slightly larger font for mobile */
+        color: #333; /* Consistent link color */
+        font-weight: 600; /* Slightly bolder for readability */
+    }
+    .nav-links-container ul li a:hover {
+        color: #000;
+    }
+}
+
+
+/* --- Main Layout: Three-column grid --- */
+.page-grid {
+    display: grid;
+    /* Defines three columns: 280px for left sidebar, flexible for main content, 280px for right sidebar */
+    grid-template-columns: 280px 1fr 280px;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+    flex-grow: 1;
+}
+
+/* --- Sidebar Styles --- */
+.sidebar, .side-panel {
+    padding: 0;
+}
+
+.card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.card h2 {
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.card p {
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.card .btn {
+    display: inline-block;
+    margin-top: 15px;
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+.demo-hub {
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 25px;
+}
+.demo-hub h2, .demo-hub p {
+    color: #fff;
+}
+.demo-hub .btn {
+    color: #fff;
+}
+.demo-hub .btn:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.card.webzibition {
+    background-image: url('images/webzibition_cover.webp');
+    background-size: cover;
+    background-position: center;
+    background-color: transparent;
+    background-blend-mode: normal;
+    color: #fff;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+    padding: 25px;
+}
+.card.webzibition::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+.webzibition h2,
+.webzibition p,
+.webzibition .btn {
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+.webzibition .entries {
+    font-size: 0.9em;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+.webzibition .btn {
+    color: #fff;
+    text-shadow: none;
+    margin-top: 10px;
+}
+.webzibition .btn:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+
+/* --- Main Content Area (Articles) --- */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0;
+}
+
+.main-content article {
+    background: #fff;
+    padding: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+}
+
+.main-content article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.main-content article img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.main-content article .text-content {
+    padding: 15px;
+}
+
+.main-content article h3 {
+    margin-bottom: 5px;
+    font-size: 1.1em;
+    color: #000;
+}
+
+.main-content article p {
+    font-size: 0.85em;
+    color: #666;
+}
+
+/* --- Right Side Panel --- */
+.side-panel {
+    /* No specific grid properties here, as it's a cell in the parent grid */
+}
+
+.side-panel .side-item {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-panel .side-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Styles for the text content within side-items (Meco and GSAP will use this) */
+/* No specific H2 or P for these cards as per your HTML comments. Using .description instead. */
+
+.side-panel .side-item .description {
+    font-size: 0.9em;
+    color: #555;
+    padding: 15px 20px 20px; /* Adjusted padding to match spacing without h2/p */
+}
+
+
+/* --- Footer Styles --- */
+.ct-footer {
+    background-color: #e6e6e6;
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+    font-family: 'Inter', sans-serif;
+    color: #000;
+    position: relative;
+    margin-top: 40px;
+}
+
+.ct-footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 2rem;
+}
+
+.ct-footer-section {
+    margin-bottom: 2rem;
+}
+
+.ct-footer-heading {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #444;
+    white-space: nowrap;
+}
+
+.ct-footer-links-col {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ct-footer-links-col li {
+    margin-bottom: 0.4rem;
+}
+
+.ct-footer-links-col a {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    transition: color 0.2s ease;
+    line-height: 1.5;
+}
+
+.ct-footer-links-col a:hover {
+    color: #000;
+}
+
+.ct-explore-site {
+    flex-shrink: 0;
+    margin-right: 3rem;
+}
+
+.ct-explore-links-wrapper {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.ct-follow-codrops {
+    flex-shrink: 0;
+    margin-right: 3rem;
+}
+
+/* Specific styling for the hosting information section to match screenshot */
+.ct-hosting-info {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.ct-hosting-info .ct-footer-heading {
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: #000;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+}
+
+.ct-hosted-by {
+    margin-bottom: 2rem;
+}
+
+.ct-hosted-by h3 {
+    margin-bottom: 0.5rem;
+}
+
+/* Updated for text "Liquid Web" instead of image */
+.liquid-web-text {
+    font-size: 1em;
+    font-weight: 600;
+    color: #333;
+    display: block;
+    margin-bottom: 1.5rem; /* Space below Liquid Web text */
+}
+
+.ct-liquidweb-logo { /* Kept in case you re-add the image */
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto 1.5rem auto;
+}
+
+.ct-content-delivered-by {
+    margin-top: 0;
+    margin-bottom: auto;
+}
+
+.ct-content-delivered-by h3 {
+    margin-bottom: 0.5rem;
+}
+
+.ct-keycdn-logo {
+    max-width: 80px;
+    height: auto;
+    display: block;
+    margin: 0 auto 2rem auto;
+}
+
+.ct-copyright {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: auto;
+}
+
+/* Styling for Patreon support badge */
+.ct-patreon-badge {
+    position: absolute;
+    bottom: 25px;
+    left: 20px;
+    background-color: #000;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: background-color 0.2s ease;
+    z-index: 100;
+}
+
+.ct-patreon-badge:hover {
+    background-color: #333;
+}
+
+.ct-patreon-badge img {
+    height: 30px;
+    width: auto;
+}
+
+
+/* --- Responsive Adjustments --- */
+/* Styles for screens up to 1024px wide */
+@media (max-width: 1024px) {
+    /* Show hamburger menu on smaller screens */
+    .hamburger-menu {
+        display: flex; /* Show the hamburger icon */
+    }
+
+    /* Hide desktop navigation links on smaller screens */
+    nav > ul { /* Target the direct child ul of nav for desktop hiding */
+        display: none;
+    }
+
+    .page-grid {
+        grid-template-columns: 1fr; /* Changes grid to a single column (stacks content) */
+        padding: 0 15px; /* Adjusts horizontal padding */
+        gap: 20px;
+    }
+
+    .sidebar, .side-panel {
+        order: 1; /* Order sidebars first on mobile */
+        margin-bottom: 0;
+    }
+
+    .main-content {
+        order: 2; /* Order main content second */
+    }
+
+    .side-panel.right {
+        order: 3; /* Order right panel last if it's placed after main content in HTML */
+    }
+
+    /* Keep logo and search visible, adjust nav spacing */
+    nav {
+        justify-content: space-between; /* Space out logo, hamburger, search */
+        gap: 20px; /* Reduce gap between items */
+    }
+    nav .logo {
+        margin-right: auto; /* Push logo to left, hamburger to right */
+    }
+
+
+    .search-input.active {
+        width: 150px;
+    }
+
+    .ct-footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .ct-explore-site,
+    .ct-follow-codrops,
+    .ct-hosting-info {
+        margin-right: 0;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    .ct-explore-site {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .ct-explore-links-wrapper {
+        gap: 2rem;
+    }
+
+    .ct-hosting-info {
+        text-align: left;
+        align-items: flex-start;
+        margin-left: 0;
+    }
+
+    .ct-liquidweb-logo,
+    .ct-keycdn-logo {
+        margin: 0 0 1.5rem 0;
+    }
+    .liquid-web-text { /* Adjust text alignment for mobile footer */
+        margin: 0 0 1.5rem 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .main-content article img {
+        height: 150px;
+        object-fit: contain;
+    }
+
+    .logo {
+        font-size: 1.2em;
+    }
+    .search-input.active {
+        width: 120px;
+        padding: 5px 0;
+        font-size: 0.85em;
+    }
+
+    .ct-footer {
+        padding-top: 2rem;
+        padding-bottom: 5rem;
+    }
+
+    .ct-footer-inner {
+        padding-bottom: 1.5rem;
+    }
+
+    .ct-explore-links-wrapper {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .ct-patreon-badge {
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 40px);
+        text-align: center;
+        justify-content: center;
+        padding: 0.8rem 1rem;
+    }
+}

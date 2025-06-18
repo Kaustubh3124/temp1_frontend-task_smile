@@ -32,13 +32,13 @@ header {
 
 nav {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-start; /* Aligns logo to start */
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-    gap: 40px;
-    position: relative; /* Essential for positioning mobile menu */
+    gap: 40px; /* Space between logo, nav container, search container */
+    position: relative;
 }
 
 .logo {
@@ -50,19 +50,56 @@ nav {
     flex-shrink: 0;
 }
 
-/* Default desktop navigation links */
-/* This targets the <ul> directly when it's not wrapped in a container,
-   but we'll adjust for the new .nav-links-container later in media queries. */
-nav > ul { /* Target the direct child ul of nav */
-    list-style: none;
-    display: flex; /* Display as flex on desktop */
-    margin: 0;
-    padding: 0;
-    gap: 25px;
-    margin-right: auto;
+/* Hamburger menu - hidden on desktop */
+.hamburger-menu {
+    width: 30px;
+    height: 25px;
+    display: none; /* Hidden by default, shown on mobile */
+    flex-direction: column;
+    justify-content: space-around;
+    cursor: pointer;
+    z-index: 1001; /* Ensure it's above other elements */
 }
 
-nav > ul li a {
+.hamburger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: #333;
+    transition: all 0.3s ease;
+}
+
+/* Animation for when the menu is open (cross icon) */
+.hamburger-menu.open .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+.hamburger-menu.open .bar:nth-child(2) {
+    opacity: 0; /* Hide middle bar */
+}
+.hamburger-menu.open .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Navigation Links Container (Desktop) */
+/* This container should behave like the original 'ul' on desktop,
+   pushing the search bar to the far right. */
+.nav-links-container {
+    display: flex; /* Make the container itself a flex container */
+    align-items: center; /* Vertically align the UL inside it */
+    margin-right: auto; /* THIS IS KEY: Pushes the search container to the far right */
+    flex-grow: 1; /* Allow it to grow and take available space */
+    padding: 0; /* No padding here, padding for links is on the ul li a */
+}
+
+/* Actual UL for navigation links (Desktop) */
+.nav-links-container ul {
+    list-style: none;
+    display: flex; /* Keep UL as flex for horizontal links */
+    margin: 0;
+    padding: 0;
+    gap: 25px; /* Space between individual navigation links */
+}
+
+.nav-links-container ul li a {
     text-decoration: none;
     color: #333;
     font-weight: 500;
@@ -71,7 +108,7 @@ nav > ul li a {
     padding: 5px 0;
 }
 
-nav > ul li a:hover {
+.nav-links-container ul li a:hover {
     color: #333;
 }
 
@@ -107,7 +144,7 @@ nav > ul li a:hover {
     opacity: 0;
     pointer-events: none;
     margin-right: 10px;
-    transition: width 0.3s ease, opacity 0.3s ease; /* Added transition */
+    transition: width 0.3s ease, opacity 0.3s ease;
 }
 
 .search-input::placeholder {
@@ -123,95 +160,9 @@ nav > ul li a:hover {
     margin-right: 10px;
 }
 
-/* --- Hamburger Menu Styles --- */
-.hamburger-menu {
-    width: 30px;
-    height: 25px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    cursor: pointer;
-    z-index: 1001; /* Ensure it's above other elements */
-    display: none; /* Hidden by default, shown on mobile */
-    margin-left: auto; /* Pushes it to the right on mobile */
-}
-
-.hamburger-menu .bar {
-    width: 100%;
-    height: 3px;
-    background-color: #333; /* Color of the bars */
-    transition: all 0.3s ease;
-}
-
-/* Animation for when the menu is open (cross icon) */
-.hamburger-menu.open .bar:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-}
-.hamburger-menu.open .bar:nth-child(2) {
-    opacity: 0; /* Hide middle bar */
-}
-.hamburger-menu.open .bar:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-}
-
-/* Mobile Navigation Menu Container (initially hidden on mobile) */
-.nav-links-container {
-    display: block; /* By default, it's a block, but we'll hide the UL inside */
-    /* On desktop, this container just wraps the UL, its styles are less critical.
-       On mobile, it becomes the full-screen overlay. */
-}
-
-@media (max-width: 1024px) {
-    /* Mobile nav container takes over the styling */
-    .nav-links-container {
-        position: absolute; /* Position relative to <nav> */
-        top: 100%; /* Position below the header */
-        left: 0;
-        width: 100%;
-        background-color: #fff; /* Background for the mobile menu */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Subtle shadow */
-        overflow: hidden; /* Hide overflow initially */
-        max-height: 0; /* Hidden by default */
-        transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out; /* Smooth slide effect */
-        z-index: 1000; /* Below hamburger, above content */
-        padding: 0 20px; /* Horizontal padding for menu items */
-    }
-
-    .nav-links-container.active {
-        max-height: 300px; /* Max height when active (adjust as needed) */
-        padding: 20px 20px; /* Padding when open */
-    }
-
-    .nav-links-container ul {
-        flex-direction: column; /* Stack links vertically */
-        margin: 0;
-        padding: 0;
-        gap: 15px; /* Space between mobile menu links */
-        text-align: center; /* Center align links */
-        display: flex; /* Ensure display flex for mobile stacking */
-    }
-
-    .nav-links-container ul li {
-        margin-bottom: 0; /* Remove default list item margin */
-    }
-
-    .nav-links-container ul li a {
-        padding: 10px 0; /* Larger clickable area for mobile links */
-        display: block; /* Make links take full width */
-        font-size: 1.1em; /* Slightly larger font for mobile */
-        color: #333; /* Consistent link color */
-        font-weight: 600; /* Slightly bolder for readability */
-    }
-    .nav-links-container ul li a:hover {
-        color: #000;
-    }
-}
-
-
-/* --- Main Layout: Three-column grid --- */
+/* --- Main Layout: Three-column grid (No change here) --- */
 .page-grid {
     display: grid;
-    /* Defines three columns: 280px for left sidebar, flexible for main content, 280px for right sidebar */
     grid-template-columns: 280px 1fr 280px;
     gap: 30px;
     max-width: 1200px;
@@ -220,7 +171,7 @@ nav > ul li a:hover {
     flex-grow: 1;
 }
 
-/* --- Sidebar Styles --- */
+/* --- Sidebar Styles (No change here) --- */
 .sidebar, .side-panel {
     padding: 0;
 }
@@ -317,8 +268,7 @@ nav > ul li a:hover {
     color: rgba(255, 255, 255, 0.7);
 }
 
-
-/* --- Main Content Area (Articles) --- */
+/* --- Main Content Area (Articles - No change here) --- */
 .main-content {
     display: flex;
     flex-direction: column;
@@ -363,7 +313,7 @@ nav > ul li a:hover {
     color: #666;
 }
 
-/* --- Right Side Panel --- */
+/* --- Right Side Panel (No change here) --- */
 .side-panel {
     /* No specific grid properties here, as it's a cell in the parent grid */
 }
@@ -383,17 +333,13 @@ nav > ul li a:hover {
     display: block;
 }
 
-/* Styles for the text content within side-items (Meco and GSAP will use this) */
-/* No specific H2 or P for these cards as per your HTML comments. Using .description instead. */
-
 .side-panel .side-item .description {
     font-size: 0.9em;
     color: #555;
-    padding: 15px 20px 20px; /* Adjusted padding to match spacing without h2/p */
+    padding: 15px 20px 20px;
 }
 
-
-/* --- Footer Styles --- */
+/* --- Footer Styles (No change here) --- */
 .ct-footer {
     background-color: #e6e6e6;
     padding-top: 3.5rem;
@@ -467,7 +413,6 @@ nav > ul li a:hover {
     margin-right: 3rem;
 }
 
-/* Specific styling for the hosting information section to match screenshot */
 .ct-hosting-info {
     text-align: center;
     display: flex;
@@ -495,16 +440,15 @@ nav > ul li a:hover {
     margin-bottom: 0.5rem;
 }
 
-/* Updated for text "Liquid Web" instead of image */
 .liquid-web-text {
     font-size: 1em;
     font-weight: 600;
     color: #333;
     display: block;
-    margin-bottom: 1.5rem; /* Space below Liquid Web text */
+    margin-bottom: 1.5rem;
 }
 
-.ct-liquidweb-logo { /* Kept in case you re-add the image */
+.ct-liquidweb-logo {
     max-width: 100px;
     height: auto;
     display: block;
@@ -533,7 +477,6 @@ nav > ul li a:hover {
     margin-top: auto;
 }
 
-/* Styling for Patreon support badge */
 .ct-patreon-badge {
     position: absolute;
     bottom: 25px;
@@ -567,12 +510,50 @@ nav > ul li a:hover {
 @media (max-width: 1024px) {
     /* Show hamburger menu on smaller screens */
     .hamburger-menu {
-        display: flex; /* Show the hamburger icon */
+        display: flex;
+        margin-left: auto; /* Pushes hamburger to the right, next to search */
     }
 
-    /* Hide desktop navigation links on smaller screens */
-    nav > ul { /* Target the direct child ul of nav for desktop hiding */
-        display: none;
+    /* Adjust nav for mobile layout */
+    nav {
+        justify-content: space-between; /* Distribute logo, hamburger, search */
+        gap: 20px; /* Reduce gap */
+    }
+
+    /* Hide desktop nav links container and prepare for mobile overlay */
+    .nav-links-container {
+        display: block; /* Change to block for mobile stacking */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+        z-index: 1000;
+        margin-right: 0; /* Reset margin */
+        flex-grow: 0; /* Prevent growing when hidden */
+    }
+
+    .nav-links-container.active {
+        max-height: 300px; /* Slide down */
+        padding: 20px 20px; /* Add padding when open */
+    }
+
+    .nav-links-container ul {
+        flex-direction: column; /* Stack vertically on mobile */
+        text-align: center;
+        gap: 15px; /* Adjust gap for vertical links */
+        display: flex; /* Ensure flex for stacking */
+    }
+
+    .nav-links-container ul li a {
+        padding: 10px 0; /* Larger clickable area */
+        display: block; /* Make links full width */
+        font-size: 1.1em;
+        font-weight: 600;
     }
 
     .page-grid {
@@ -593,16 +574,6 @@ nav > ul li a:hover {
     .side-panel.right {
         order: 3; /* Order right panel last if it's placed after main content in HTML */
     }
-
-    /* Keep logo and search visible, adjust nav spacing */
-    nav {
-        justify-content: space-between; /* Space out logo, hamburger, search */
-        gap: 20px; /* Reduce gap between items */
-    }
-    nav .logo {
-        margin-right: auto; /* Push logo to left, hamburger to right */
-    }
-
 
     .search-input.active {
         width: 150px;
@@ -625,11 +596,6 @@ nav > ul li a:hover {
         margin-bottom: 2rem;
     }
 
-    .ct-explore-site {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
     .ct-explore-links-wrapper {
         gap: 2rem;
     }
@@ -644,7 +610,7 @@ nav > ul li a:hover {
     .ct-keycdn-logo {
         margin: 0 0 1.5rem 0;
     }
-    .liquid-web-text { /* Adjust text alignment for mobile footer */
+    .liquid-web-text {
         margin: 0 0 1.5rem 0;
     }
 }
